@@ -15,5 +15,7 @@ mvn clean package -Pproduction
 docker-compose up
 ```
 
+Form address http://localhost:8080
+
 ## Technologies which I use:
 Java 17, Spring Boot 3, Sprting Data, Vaadin 24, Docker, Maven, H2.
