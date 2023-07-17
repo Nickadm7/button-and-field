@@ -18,7 +18,7 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.shared.Registration;
 
-@Route("main")
+@Route("")
 public class MainView extends VerticalLayout {
     private final InputNumberService inputNumberService;
     private final HistoryGrid historyGrid;
