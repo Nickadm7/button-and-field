@@ -1,5 +1,8 @@
 package com.example.test;
 
+import com.example.test.model.InputNumber;
+import com.example.test.model.HistoryGrid;
+import com.example.test.service.InputNumberService;
 import com.github.rjeschke.txtmark.Processor;
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
@@ -16,17 +19,18 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.shared.Registration;
 
 @Route("main")
-//@Push
 public class MainView extends VerticalLayout {
-    private final Storage storage;
-    private final Grid<Storage.QueryHistory> grid;
+    private final InputNumberService inputNumberService;
+    private final HistoryGrid historyGrid;
+    private final Grid<HistoryGrid.QueryHistory> grid;
     private Registration registration;
     InputNumber inputNumber;
 
-    public MainView(Storage storage) {
-        this.storage = storage;
+    public MainView(InputNumberService inputNumberService, HistoryGrid historyGrid) {
+        this.inputNumberService = inputNumberService;
+        this.historyGrid = historyGrid;
         grid = new Grid<>();
-        grid.setItems(storage.getHistories());
+        grid.setItems(historyGrid.getHistories());
         grid.addColumn(new ComponentRenderer<>(message -> new Html(renderRow(message)))).setHeader("History");
 
         Binder<InputNumber> binder = new Binder<>(InputNumber.class);
@@ -39,7 +43,7 @@ public class MainView extends VerticalLayout {
                 .bind(
                         InputNumber::getInputNumber,
                         InputNumber::setInputNumber);
-        inputNumber = new InputNumber("0");
+        inputNumber = new InputNumber(0L, "0");
 
         add(
                 new H3("Тестовое задание: Добавить кнопку и текстовое поле на страницу."),
@@ -55,9 +59,9 @@ public class MainView extends VerticalLayout {
                                     } catch (ValidationException e) {
                                         throw new RuntimeException(e);
                                     }
-                                    inputNumber.plusOne();
-                                    storage.addRecord(titleField.getValue());
-                                    binder.readBean(inputNumber);
+                                    inputNumberService.addInputNumber(inputNumber);
+                                    historyGrid.addRecord(titleField.getValue());
+                                    binder.readBean(inputNumberService.plusOne(inputNumber));
                                 });
                                 addClickShortcut(Key.ENTER);
                             }}
@@ -67,8 +71,7 @@ public class MainView extends VerticalLayout {
         );
     }
 
-    public void onMessage(Storage.QueryEvent event) {
-
+    public void onMessage(HistoryGrid.QueryEvent event) {
         if (getUI().isPresent()) {
             UI ui = getUI().get();
             ui.getSession().lock();
@@ -78,13 +81,13 @@ public class MainView extends VerticalLayout {
         }
     }
 
-    private String renderRow(Storage.QueryHistory message) {
+    private String renderRow(HistoryGrid.QueryHistory message) {
         return Processor.process(String.format("**%s**", message.getNumber()));
     }
 
     @Override
     protected void onAttach(AttachEvent attachEvent) {
-        registration = storage.attachListener(this::onMessage);
+        registration = historyGrid.attachListener(this::onMessage);
     }
 
     @Override

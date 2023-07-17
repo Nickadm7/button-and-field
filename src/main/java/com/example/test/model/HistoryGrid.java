@@ -1,4 +1,4 @@
-package com.example.test;
+package com.example.test.model;
 
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventBus;
@@ -14,7 +14,7 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 @Component
-public class Storage {
+public class HistoryGrid {
     @Getter
     private final Queue<QueryHistory> histories = new ConcurrentLinkedQueue<>();
     private final ComponentEventBus eventBus = new ComponentEventBus(new Div());
