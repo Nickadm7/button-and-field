@@ -1,7 +1,7 @@
 package com.example.test;
 
-import com.example.test.model.InputNumber;
 import com.example.test.model.HistoryGrid;
+import com.example.test.model.InputNumber;
 import com.example.test.service.InputNumberService;
 import com.github.rjeschke.txtmark.Processor;
 import com.vaadin.flow.component.*;
@@ -24,7 +24,7 @@ public class MainView extends VerticalLayout {
     private final HistoryGrid historyGrid;
     private final Grid<HistoryGrid.QueryHistory> grid;
     private Registration registration;
-    InputNumber inputNumber;
+    private InputNumber inputNumber;
 
     public MainView(InputNumberService inputNumberService, HistoryGrid historyGrid) {
         this.inputNumberService = inputNumberService;
